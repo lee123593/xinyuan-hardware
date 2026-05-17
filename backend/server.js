@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
 
 const app = express();
 const PORT = 3000;
@@ -12,7 +13,27 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '..')));
 
 const DATA_DIR = path.join(__dirname, 'data');
+const UPLOAD_DIR = path.join(__dirname, '..', 'uploads');
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+
+// 图片上传配置
+const storage = multer.diskStorage({
+  destination: UPLOAD_DIR,
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, 'product_' + Date.now() + Math.random().toString(36).slice(2, 6) + ext);
+  }
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('只允许上传图片文件'));
+  }
+});
+app.use('/uploads', express.static(UPLOAD_DIR));
 
 function readJSON(filename) {
   try {
@@ -25,6 +46,14 @@ function readJSON(filename) {
 function writeJSON(filename, data) {
   fs.writeFileSync(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2), 'utf-8');
 }
+
+// ============ 图片上传 ============
+
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: '请选择图片文件' });
+  const url = '/uploads/' + req.file.filename;
+  res.json({ success: true, url });
+});
 
 // ============ 商品 API ============
 

@@ -1,4 +1,5 @@
 node_modules/
 backend/data/*.json
+uploads/
 .env
 .DS_Store

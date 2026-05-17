@@ -231,6 +231,24 @@ async function loadProducts() {
   } catch { }
 }
 
+function previewImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById('imagePreviewImg').src = e.target.result;
+    document.getElementById('imagePreview').classList.remove('hidden');
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearImage() {
+  document.getElementById('prodImageFile').value = '';
+  document.getElementById('prodImage').value = '';
+  document.getElementById('imagePreview').classList.add('hidden');
+  document.getElementById('imagePreviewImg').src = '';
+}
+
 function openProductForm() {
   document.getElementById('productFormTitle').textContent = '添加商品';
   document.getElementById('prodId').value = '';
@@ -239,9 +257,11 @@ function openProductForm() {
   document.getElementById('prodPrice').value = '';
   document.getElementById('prodUnit').value = '个';
   document.getElementById('prodStock').value = '0';
-  document.getElementById('prodImage').value = '📦';
+  document.getElementById('prodImage').value = '';
+  document.getElementById('prodImageFile').value = '';
   document.getElementById('prodDesc').value = '';
   document.getElementById('prodFeatured').checked = false;
+  document.getElementById('imagePreview').classList.add('hidden');
   document.getElementById('productModal').classList.remove('hidden');
 }
 
@@ -256,9 +276,17 @@ async function editProduct(id) {
     document.getElementById('prodPrice').value = p.price;
     document.getElementById('prodUnit').value = p.unit;
     document.getElementById('prodStock').value = p.stock;
-    document.getElementById('prodImage').value = p.image;
+    document.getElementById('prodImage').value = p.image || '';
+    document.getElementById('prodImageFile').value = '';
     document.getElementById('prodDesc').value = p.desc;
     document.getElementById('prodFeatured').checked = p.featured;
+    // 显示已有图片
+    if (p.image && p.image.startsWith('/uploads/')) {
+      document.getElementById('imagePreviewImg').src = p.image;
+      document.getElementById('imagePreview').classList.remove('hidden');
+    } else {
+      document.getElementById('imagePreview').classList.add('hidden');
+    }
     document.getElementById('productModal').classList.remove('hidden');
   } catch { alert('加载商品信息失败'); }
 }
@@ -270,13 +298,28 @@ function closeProductForm() {
 async function saveProduct(e) {
   e.preventDefault();
   const id = document.getElementById('prodId').value;
+
+  // 处理图片：如果有新上传的图片先上传
+  let image = document.getElementById('prodImage').value;
+  const fileInput = document.getElementById('prodImageFile');
+  if (fileInput.files.length > 0) {
+    const formData = new FormData();
+    formData.append('image', fileInput.files[0]);
+    try {
+      const uploadRes = await fetch(`${API}/upload`, { method: 'POST', body: formData });
+      const uploadData = await uploadRes.json();
+      if (!uploadRes.ok) { alert(uploadData.error); return; }
+      image = uploadData.url;
+    } catch { alert('图片上传失败'); return; }
+  }
+
   const body = {
     name: document.getElementById('prodName').value.trim(),
     category: document.getElementById('prodCategory').value,
     price: parseFloat(document.getElementById('prodPrice').value),
     unit: document.getElementById('prodUnit').value.trim(),
     stock: parseInt(document.getElementById('prodStock').value) || 0,
-    image: document.getElementById('prodImage').value.trim() || '📦',
+    image: image || '📦',
     desc: document.getElementById('prodDesc').value.trim(),
     featured: document.getElementById('prodFeatured').checked
   };

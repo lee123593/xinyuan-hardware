@@ -23,6 +23,16 @@ async function loadProducts() {
   }
 }
 
+// ============ 图片渲染 ============
+function productImage(p, size) {
+  if (p.image && (p.image.startsWith('/uploads/') || p.image.startsWith('http'))) {
+    const cls = size === 'large' ? 'w-full h-48 object-cover' : size === 'cart' ? 'w-10 h-10 object-cover rounded' : 'w-16 h-16 object-cover rounded-xl';
+    return `<img src="${p.image}" alt="${p.name}" class="${cls}" onerror="this.parentElement.innerHTML='<span class=text-3xl>📦</span>'">`;
+  }
+  const iconSize = size === 'large' ? 'text-6xl' : size === 'cart' ? 'text-3xl' : 'text-5xl';
+  return `<span class="${iconSize}">${p.image || '📦'}</span>`;
+}
+
 // ============ 分类标签 ============
 function renderCategories() {
   const categories = ['全部', ...new Set(allProducts.map(p => p.category))];
@@ -65,7 +75,7 @@ function renderProducts() {
 
   grid.innerHTML = filtered.map(p => `
     <div class="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden flex flex-col group border border-steel-100 hover:border-rust-300">
-      <div class="text-6xl text-center py-8 bg-steel-50 group-hover:bg-steel-100 transition">${p.image}</div>
+      <div class="text-center bg-steel-50 group-hover:bg-steel-100 transition flex items-center justify-center overflow-hidden" style="height:200px">${productImage(p, 'large')}</div>
       <div class="p-5 flex-1 flex flex-col gap-3">
         <div>
           <span class="text-xs text-rust-500 font-semibold bg-rust-50 px-2 py-0.5 rounded">${p.category}</span>
@@ -90,7 +100,7 @@ function renderFeatured() {
   const grid = document.getElementById('featuredGrid');
   grid.innerHTML = featured.map(p => `
     <div class="bg-white/5 backdrop-blur rounded-xl p-6 border border-white/10 hover:border-rust-500 transition flex gap-4 items-start">
-      <div class="text-5xl shrink-0">${p.image}</div>
+      <div class="shrink-0 flex items-center justify-center" style="width:64px;height:64px">${productImage(p, 'small')}</div>
       <div class="min-w-0">
         <span class="text-xs text-rust-400 font-semibold">${p.category}</span>
         <h3 class="font-bold text-white mt-1 leading-snug">${p.name}</h3>
@@ -152,7 +162,7 @@ function renderCart() {
   } else {
     container.innerHTML = cart.map(item => `
       <div class="flex gap-3 items-center border-b border-steel-100 pb-3">
-        <div class="text-3xl">${item.image}</div>
+        <div class="w-10 h-10 flex items-center justify-center overflow-hidden rounded">${productImage(item, 'cart')}</div>
         <div class="flex-1 min-w-0">
           <p class="text-sm font-semibold text-steel-900 truncate">${item.name}</p>
           <p class="text-xs text-steel-500">¥${item.price.toFixed(2)}/${item.unit}</p>
