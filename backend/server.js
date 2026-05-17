@@ -12,6 +12,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '..')));
 
 const DATA_DIR = path.join(__dirname, 'data');
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
 function readJSON(filename) {
   try {
