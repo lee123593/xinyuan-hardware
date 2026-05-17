@@ -1,0 +1,19 @@
+/* 全局滚动平滑 */
+html { scroll-behavior: smooth; }
+
+/* 行数截断 */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 购物车过渡 */
+#cartSidebar { transition: transform 0.3s ease; }
+
+/* Toast 过渡 */
+#toast { transition: opacity 0.3s ease, visibility 0.3s ease; }
+
+/* 商品卡片悬停 */
+.product-card:hover { transform: translateY(-2px); }
