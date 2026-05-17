@@ -32,7 +32,7 @@ function logout() {
 })();
 
 async function loadAll() {
-  await Promise.all([loadStats(), loadOrders(), loadInquiries(), loadMessages()]);
+  await Promise.all([loadStats(), loadOrders(), loadProducts(), loadInquiries(), loadMessages()]);
 }
 
 // ============ 统计 ============
@@ -195,6 +195,114 @@ async function markRead(id) {
     loadMessages();
     loadStats();
   } catch { alert('操作失败'); }
+}
+
+// ============ 商品管理 ============
+async function loadProducts() {
+  try {
+    const res = await fetch(`${API}/products`);
+    const list = await res.json();
+    const tbody = document.getElementById('productTableBody');
+    const empty = document.getElementById('productEmpty');
+    if (list.length === 0) {
+      tbody.innerHTML = '';
+      empty.classList.remove('hidden');
+    } else {
+      empty.classList.add('hidden');
+      tbody.innerHTML = list.map(p => `
+        <tr class="border-b border-steel-100 hover:bg-steel-50">
+          <td class="px-4 py-3 font-mono text-xs">${p.id}</td>
+          <td class="px-4 py-3 text-2xl">${p.image}</td>
+          <td class="px-4 py-3">
+            <div class="font-semibold">${p.name}</div>
+            <div class="text-xs text-steel-500">${p.desc.substring(0, 30)}...</div>
+          </td>
+          <td class="px-4 py-3"><span class="text-xs bg-steel-100 px-2 py-0.5 rounded">${p.category}</span></td>
+          <td class="px-4 py-3 text-right font-semibold text-rust-600">¥${p.price.toFixed(2)}</td>
+          <td class="px-4 py-3 text-center text-xs">${p.stock}</td>
+          <td class="px-4 py-3 text-center">${p.featured ? '⭐' : '-'}</td>
+          <td class="px-4 py-3 text-center">
+            <button onclick="editProduct(${p.id})" class="text-blue-600 hover:underline text-xs mr-2">编辑</button>
+            <button onclick="deleteProduct(${p.id})" class="text-red-600 hover:underline text-xs">删除</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+  } catch { }
+}
+
+function openProductForm() {
+  document.getElementById('productFormTitle').textContent = '添加商品';
+  document.getElementById('prodId').value = '';
+  document.getElementById('prodName').value = '';
+  document.getElementById('prodCategory').value = '';
+  document.getElementById('prodPrice').value = '';
+  document.getElementById('prodUnit').value = '个';
+  document.getElementById('prodStock').value = '0';
+  document.getElementById('prodImage').value = '📦';
+  document.getElementById('prodDesc').value = '';
+  document.getElementById('prodFeatured').checked = false;
+  document.getElementById('productModal').classList.remove('hidden');
+}
+
+async function editProduct(id) {
+  try {
+    const res = await fetch(`${API}/products/${id}`);
+    const p = await res.json();
+    document.getElementById('productFormTitle').textContent = '编辑商品';
+    document.getElementById('prodId').value = p.id;
+    document.getElementById('prodName').value = p.name;
+    document.getElementById('prodCategory').value = p.category;
+    document.getElementById('prodPrice').value = p.price;
+    document.getElementById('prodUnit').value = p.unit;
+    document.getElementById('prodStock').value = p.stock;
+    document.getElementById('prodImage').value = p.image;
+    document.getElementById('prodDesc').value = p.desc;
+    document.getElementById('prodFeatured').checked = p.featured;
+    document.getElementById('productModal').classList.remove('hidden');
+  } catch { alert('加载商品信息失败'); }
+}
+
+function closeProductForm() {
+  document.getElementById('productModal').classList.add('hidden');
+}
+
+async function saveProduct(e) {
+  e.preventDefault();
+  const id = document.getElementById('prodId').value;
+  const body = {
+    name: document.getElementById('prodName').value.trim(),
+    category: document.getElementById('prodCategory').value,
+    price: parseFloat(document.getElementById('prodPrice').value),
+    unit: document.getElementById('prodUnit').value.trim(),
+    stock: parseInt(document.getElementById('prodStock').value) || 0,
+    image: document.getElementById('prodImage').value.trim() || '📦',
+    desc: document.getElementById('prodDesc').value.trim(),
+    featured: document.getElementById('prodFeatured').checked
+  };
+
+  try {
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `${API}/products/${id}` : `${API}/products`;
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (!res.ok) { alert(data.error); return; }
+
+    closeProductForm();
+    loadProducts();
+  } catch { alert('保存失败，请检查网络'); }
+}
+
+async function deleteProduct(id) {
+  if (!confirm('确定要删除该商品吗？此操作不可恢复。')) return;
+  try {
+    await fetch(`${API}/products/${id}`, { method: 'DELETE' });
+    loadProducts();
+  } catch { alert('删除失败'); }
 }
 
 // ============ 标签切换 ============

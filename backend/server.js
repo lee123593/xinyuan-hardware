@@ -62,6 +62,66 @@ app.get('/api/products/:id', (req, res) => {
   res.json(product);
 });
 
+// 添加商品
+app.post('/api/products', (req, res) => {
+  const products = readJSON('products.json');
+  const { name, category, price, unit, stock, image, desc, featured } = req.body;
+
+  if (!name || !category || price == null) {
+    return res.status(400).json({ error: '商品名称、分类、价格为必填项' });
+  }
+
+  const maxId = products.length > 0 ? Math.max(...products.map(p => p.id)) : 0;
+  const product = {
+    id: maxId + 1,
+    name,
+    category,
+    price: parseFloat(price),
+    unit: unit || '个',
+    stock: parseInt(stock) || 0,
+    image: image || '📦',
+    desc: desc || '',
+    featured: featured === true || featured === 'true'
+  };
+
+  products.push(product);
+  writeJSON('products.json', products);
+  res.status(201).json({ success: true, product });
+});
+
+// 更新商品
+app.put('/api/products/:id', (req, res) => {
+  const products = readJSON('products.json');
+  const index = products.findIndex(p => p.id === parseInt(req.params.id));
+  if (index === -1) return res.status(404).json({ error: '商品不存在' });
+
+  const { name, category, price, unit, stock, image, desc, featured } = req.body;
+  const product = products[index];
+
+  if (name !== undefined) product.name = name;
+  if (category !== undefined) product.category = category;
+  if (price !== undefined) product.price = parseFloat(price);
+  if (unit !== undefined) product.unit = unit;
+  if (stock !== undefined) product.stock = parseInt(stock);
+  if (image !== undefined) product.image = image;
+  if (desc !== undefined) product.desc = desc;
+  if (featured !== undefined) product.featured = featured === true || featured === 'true';
+
+  writeJSON('products.json', products);
+  res.json({ success: true, product });
+});
+
+// 删除商品
+app.delete('/api/products/:id', (req, res) => {
+  const products = readJSON('products.json');
+  const index = products.findIndex(p => p.id === parseInt(req.params.id));
+  if (index === -1) return res.status(404).json({ error: '商品不存在' });
+
+  products.splice(index, 1);
+  writeJSON('products.json', products);
+  res.json({ success: true });
+});
+
 // ============ 订单 API ============
 
 // 创建订单
