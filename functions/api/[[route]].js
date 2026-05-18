@@ -4,6 +4,18 @@ export async function onRequest(context) {
   const path = '/api/' + (params.route || '');
   const method = request.method;
 
+  // CORS preflight
+  if (method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    });
+  }
+
   try {
     let result;
 
@@ -328,6 +340,12 @@ async function handleUpload(request) {
 // ===================== Helpers =====================
 
 function json(data, status = 200) {
-  const headers = { 'Content-Type': 'application/json; charset=utf-8' };
+  const headers = {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
   return new Response(JSON.stringify(data), { status, headers });
 }
+
