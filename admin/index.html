@@ -3,184 +3,186 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>商家后台 - 新远五金</title>
+  <title>管理后台 — 新远五金</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['Inter', 'SF Pro Display', '-apple-system', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'SF Mono', 'ui-monospace', 'monospace'],
+          },
           colors: {
-            steel: { 50:'#f7f8f8',100:'#eef0f0',200:'#d5d9d9',300:'#b3b9b9',400:'#8a9292',500:'#6b7373',600:'#555c5c',700:'#3f4545',800:'#2a2e2e',900:'#1a1d1d',950:'#0f1111' },
-            rust: { 50:'#fef7ee',100:'#fdedd3',200:'#fad7a5',300:'#f6ba6d',400:'#f19433',500:'#ee7812',600:'#df5f08',700:'#b94709',800:'#93390e',900:'#77300f' }
+            rust: { 50:'#fff7ed',100:'#ffedd5',200:'#fed7aa',300:'#fdba74',400:'#fb923c',500:'#f97316',600:'#ea580c',700:'#c2410c',800:'#9a3412',900:'#7c2d12' },
           }
         }
       }
     }
   </script>
   <style>
-    .tab-btn.active { background: #1a1d1d; color: white; }
-    .status-badge { font-size: 12px; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
-    .status-待处理 { background: #fde8e8; color: #c53030; }
-    .status-处理中 { background: #fef3c7; color: #b45309; }
-    .status-已发货 { background: #dbeafe; color: #1d4ed8; }
-    .status-已完成 { background: #d1fae5; color: #065f46; }
-    .status-待回复 { background: #fde8e8; color: #c53030; }
-    .status-已回复 { background: #d1fae5; color: #065f46; }
+    .tab-btn.active { background: #1c1917; color: white; }
+    .tag { font-size: 11px; padding: 1px 8px; border-radius: 2px; font-weight: 600; }
+    .tag-pending { background: #fef2f2; color: #dc2626; }
+    .tag-processing { background: #fffbeb; color: #d97706; }
+    .tag-shipped { background: #eff6ff; color: #2563eb; }
+    .tag-done { background: #f0fdf4; color: #16a34a; }
   </style>
 </head>
-<body class="bg-steel-100 min-h-screen text-steel-900">
+<body class="bg-stone-50 min-h-screen text-stone-900 font-sans">
 
-<!-- ============ 登录 ============ -->
+<!-- Login -->
 <div id="loginPage" class="min-h-screen flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm">
+  <div class="bg-white border border-stone-200 p-8 w-full max-w-sm">
     <div class="text-center mb-8">
-      <span class="text-5xl">🔩</span>
-      <h1 class="text-2xl font-bold mt-3">新远五金</h1>
-      <p class="text-steel-500 text-sm mt-1">商家管理后台</p>
+      <h1 class="text-xl font-bold tracking-tight text-stone-900">XINYUAN</h1>
+      <p class="text-xs text-stone-400 mt-1">管理后台</p>
     </div>
     <form onsubmit="login(event)" class="space-y-4">
       <div>
-        <label class="block text-sm font-semibold text-steel-700 mb-1">管理员密码</label>
-        <input type="password" id="pwd" required class="w-full border border-steel-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rust-400">
+        <label class="block text-xs font-semibold text-stone-600 mb-1.5">管理员密码</label>
+        <input type="password" id="pwd" required class="w-full border border-stone-200 px-4 py-2.5 text-sm focus:outline-none focus:border-stone-400">
       </div>
-      <button type="submit" class="w-full bg-steel-900 hover:bg-steel-800 text-white py-3 rounded-lg font-semibold transition">🔐 登录</button>
+      <button type="submit" class="w-full bg-stone-900 hover:bg-stone-800 text-white py-2.5 text-sm font-medium transition-colors">登录</button>
     </form>
-    <p class="text-xs text-steel-400 text-center mt-4">默认密码: admin123</p>
+    <p class="text-[10px] text-stone-300 text-center mt-4">默认密码: 123</p>
   </div>
 </div>
 
-<!-- ============ 主面板 ============ -->
+<!-- Dashboard -->
 <div id="dashboard" class="hidden">
-  <!-- 顶栏 -->
-  <header class="bg-steel-950 text-white px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+  <header class="bg-stone-900 text-white px-6 py-4 flex items-center justify-between sticky top-0 z-40">
     <div class="flex items-center gap-3">
-      <span class="text-2xl">🔩</span>
-      <span class="font-bold text-lg">新远五金 · 商家后台</span>
+      <span class="font-bold tracking-tight">XINYUAN</span>
+      <span class="text-xs text-stone-400">管理后台</span>
     </div>
-    <div class="flex items-center gap-4">
-      <a href="../index.html" target="_blank" class="text-sm text-steel-400 hover:text-white transition">🏠 前台</a>
-      <button onclick="logout()" class="text-sm text-steel-400 hover:text-white transition">退出</button>
+    <div class="flex items-center gap-4 text-xs text-stone-400">
+      <a href="../index.html" target="_blank" class="hover:text-white transition-colors">前台</a>
+      <button onclick="logout()" class="hover:text-white transition-colors">退出</button>
     </div>
   </header>
 
-  <div class="max-w-7xl mx-auto px-4 py-8">
-    <!-- 统计卡片 -->
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8" id="statCards"></div>
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mb-8" id="statCards"></div>
 
-    <!-- 标签页 -->
-    <div class="flex gap-2 mb-6 flex-wrap">
-      <button class="tab-btn px-5 py-2.5 rounded-lg text-sm font-semibold transition bg-white border border-steel-300 hover:border-steel-500 active" onclick="switchTab('orders')" id="tabBtn-orders">📦 订单管理</button>
-      <button class="tab-btn px-5 py-2.5 rounded-lg text-sm font-semibold transition bg-white border border-steel-300 hover:border-steel-500" onclick="switchTab('inquiries')" id="tabBtn-inquiries">📋 询价管理</button>
-      <button class="tab-btn px-5 py-2.5 rounded-lg text-sm font-semibold transition bg-white border border-steel-300 hover:border-steel-500" onclick="switchTab('products')" id="tabBtn-products">📦 商品管理</button>
-      <button class="tab-btn px-5 py-2.5 rounded-lg text-sm font-semibold transition bg-white border border-steel-300 hover:border-steel-500" onclick="switchTab('messages')" id="tabBtn-messages">💬 留言管理</button>
+    <!-- Tabs -->
+    <div class="flex gap-1 mb-8">
+      <button class="tab-btn px-4 py-2 text-xs font-medium transition-colors border border-stone-200 bg-white active" onclick="switchTab('orders')" id="tabBtn-orders">订单管理</button>
+      <button class="tab-btn px-4 py-2 text-xs font-medium transition-colors border border-stone-200 bg-white" onclick="switchTab('inquiries')" id="tabBtn-inquiries">询价管理</button>
+      <button class="tab-btn px-4 py-2 text-xs font-medium transition-colors border border-stone-200 bg-white" onclick="switchTab('products')" id="tabBtn-products">商品管理</button>
+      <button class="tab-btn px-4 py-2 text-xs font-medium transition-colors border border-stone-200 bg-white" onclick="switchTab('messages')" id="tabBtn-messages">留言管理</button>
     </div>
 
-    <!-- 订单标签页 -->
+    <!-- Orders Tab -->
     <div id="tab-orders" class="tab-content">
-      <div class="flex gap-2 mb-4 flex-wrap" id="orderStatusFilter"></div>
-      <div class="bg-white rounded-xl shadow overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead class="bg-steel-100 text-steel-600 text-xs uppercase">
+      <div class="flex gap-1 mb-4 flex-wrap" id="orderStatusFilter"></div>
+      <div class="bg-white border border-stone-200">
+        <table class="w-full text-xs">
+          <thead class="bg-stone-50 text-stone-500 border-b border-stone-200">
             <tr>
-              <th class="px-4 py-3 text-left">订单号</th>
-              <th class="px-4 py-3 text-left">客户</th>
-              <th class="px-4 py-3 text-left">商品</th>
-              <th class="px-4 py-3 text-right">金额</th>
-              <th class="px-4 py-3 text-center">状态</th>
-              <th class="px-4 py-3 text-left">时间</th>
-              <th class="px-4 py-3 text-center">操作</th>
+              <th class="px-4 py-2.5 text-left font-medium">订单号</th>
+              <th class="px-4 py-2.5 text-left font-medium">客户</th>
+              <th class="px-4 py-2.5 text-left font-medium">商品</th>
+              <th class="px-4 py-2.5 text-right font-medium">金额</th>
+              <th class="px-4 py-2.5 text-center font-medium">状态</th>
+              <th class="px-4 py-2.5 text-left font-medium">时间</th>
+              <th class="px-4 py-2.5 text-center font-medium">操作</th>
             </tr>
           </thead>
           <tbody id="orderTableBody"></tbody>
         </table>
-        <div id="orderEmpty" class="text-center py-12 text-steel-400 hidden">暂无订单</div>
+        <div id="orderEmpty" class="text-center py-12 text-stone-400 text-xs hidden">暂无订单</div>
       </div>
     </div>
 
-    <!-- 询价标签页 -->
+    <!-- Inquiries Tab -->
     <div id="tab-inquiries" class="tab-content hidden">
-      <div class="bg-white rounded-xl shadow overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead class="bg-steel-100 text-steel-600 text-xs uppercase">
+      <div class="bg-white border border-stone-200">
+        <table class="w-full text-xs">
+          <thead class="bg-stone-50 text-stone-500 border-b border-stone-200">
             <tr>
-              <th class="px-4 py-3 text-left">编号</th>
-              <th class="px-4 py-3 text-left">姓名</th>
-              <th class="px-4 py-3 text-left">电话</th>
-              <th class="px-4 py-3 text-left">公司</th>
-              <th class="px-4 py-3 text-left">询价产品</th>
-              <th class="px-4 py-3 text-center">数量</th>
-              <th class="px-4 py-3 text-center">状态</th>
-              <th class="px-4 py-3 text-left">时间</th>
+              <th class="px-4 py-2.5 text-left font-medium">编号</th>
+              <th class="px-4 py-2.5 text-left font-medium">姓名</th>
+              <th class="px-4 py-2.5 text-left font-medium">电话</th>
+              <th class="px-4 py-2.5 text-left font-medium">公司</th>
+              <th class="px-4 py-2.5 text-left font-medium">产品</th>
+              <th class="px-4 py-2.5 text-center font-medium">数量</th>
+              <th class="px-4 py-2.5 text-center font-medium">状态</th>
+              <th class="px-4 py-2.5 text-left font-medium">时间</th>
             </tr>
           </thead>
           <tbody id="inquiryTableBody"></tbody>
         </table>
-        <div id="inquiryEmpty" class="text-center py-12 text-steel-400 hidden">暂无询价</div>
+        <div id="inquiryEmpty" class="text-center py-12 text-stone-400 text-xs hidden">暂无询价</div>
       </div>
     </div>
 
-    <!-- 商品管理标签页 -->
+    <!-- Products Tab -->
     <div id="tab-products" class="tab-content hidden">
       <div class="mb-4">
-        <button onclick="openProductForm()" class="bg-rust-500 hover:bg-rust-600 text-white px-5 py-2.5 rounded-lg font-semibold text-sm transition">＋ 添加商品</button>
+        <button onclick="openProductForm()" class="bg-stone-900 hover:bg-stone-800 text-white px-4 py-2 text-xs font-medium transition-colors">+ 添加商品</button>
+        <button onclick="toggleAdminProductView()" id="adminViewToggle" class="ml-2 border border-stone-300 text-stone-600 hover:border-stone-800 px-4 py-2 text-xs font-medium transition-colors">折叠视图</button>
       </div>
-      <div class="bg-white rounded-xl shadow overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead class="bg-steel-100 text-steel-600 text-xs uppercase">
-            <tr>
-              <th class="px-4 py-3 text-left w-16">ID</th>
-              <th class="px-4 py-3 text-left">图标</th>
-              <th class="px-4 py-3 text-left">名称</th>
-              <th class="px-4 py-3 text-left">分类</th>
-              <th class="px-4 py-3 text-right">价格</th>
-              <th class="px-4 py-3 text-center">库存</th>
-              <th class="px-4 py-3 text-center">推荐</th>
-              <th class="px-4 py-3 text-center">操作</th>
-            </tr>
-          </thead>
-          <tbody id="productTableBody"></tbody>
-        </table>
-        <div id="productEmpty" class="text-center py-12 text-steel-400 hidden">暂无商品</div>
+      <div id="adminProductTable">
+        <div class="bg-white border border-stone-200">
+          <table class="w-full text-xs">
+            <thead class="bg-stone-50 text-stone-500 border-b border-stone-200">
+              <tr>
+                <th class="px-4 py-2.5 text-left font-medium w-16">ID</th>
+                <th class="px-4 py-2.5 text-left font-medium">名称</th>
+                <th class="px-4 py-2.5 text-left font-medium">分类</th>
+                <th class="px-4 py-2.5 text-right font-medium">价格</th>
+                <th class="px-4 py-2.5 text-center font-medium">库存</th>
+                <th class="px-4 py-2.5 text-center font-medium">推荐</th>
+                <th class="px-4 py-2.5 text-center font-medium">操作</th>
+              </tr>
+            </thead>
+            <tbody id="productTableBody"></tbody>
+          </table>
+          <div id="productEmpty" class="text-center py-12 text-stone-400 text-xs hidden">暂无商品</div>
+        </div>
       </div>
+      <div id="adminProductAccordion" class="hidden space-y-px"></div>
     </div>
 
-    <!-- 留言标签页 -->
+    <!-- Messages Tab -->
     <div id="tab-messages" class="tab-content hidden">
-      <div class="bg-white rounded-xl shadow overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead class="bg-steel-100 text-steel-600 text-xs uppercase">
+      <div class="bg-white border border-stone-200">
+        <table class="w-full text-xs">
+          <thead class="bg-stone-50 text-stone-500 border-b border-stone-200">
             <tr>
-              <th class="px-4 py-3 text-left">编号</th>
-              <th class="px-4 py-3 text-left">姓名</th>
-              <th class="px-4 py-3 text-left">电话</th>
-              <th class="px-4 py-3 text-left">留言内容</th>
-              <th class="px-4 py-3 text-center">状态</th>
-              <th class="px-4 py-3 text-left">时间</th>
+              <th class="px-4 py-2.5 text-left font-medium">编号</th>
+              <th class="px-4 py-2.5 text-left font-medium">姓名</th>
+              <th class="px-4 py-2.5 text-left font-medium">电话</th>
+              <th class="px-4 py-2.5 text-left font-medium">内容</th>
+              <th class="px-4 py-2.5 text-center font-medium">状态</th>
+              <th class="px-4 py-2.5 text-left font-medium">时间</th>
             </tr>
           </thead>
           <tbody id="messageTableBody"></tbody>
         </table>
-        <div id="messageEmpty" class="text-center py-12 text-steel-400 hidden">暂无留言</div>
+        <div id="messageEmpty" class="text-center py-12 text-stone-400 text-xs hidden">暂无留言</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ============ 商品编辑弹窗 ============ -->
-<div id="productModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-  <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 relative max-h-[90vh] overflow-y-auto">
-    <button onclick="closeProductForm()" class="absolute top-4 right-4 text-2xl text-steel-500 hover:text-steel-900">&times;</button>
-    <h3 class="text-xl font-bold text-steel-900 mb-6" id="productFormTitle">添加商品</h3>
+<!-- Product Modal -->
+<div id="productModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-white border border-stone-200 w-full max-w-lg p-8 relative max-h-[90vh] overflow-y-auto">
+    <button onclick="closeProductForm()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-900 text-xl">&times;</button>
+    <h3 class="text-lg font-bold text-stone-900 mb-6" id="productFormTitle">添加商品</h3>
     <form onsubmit="saveProduct(event)" class="space-y-4">
       <input type="hidden" id="prodId">
       <div>
-        <label class="block text-sm font-semibold text-steel-700 mb-1">商品名称 <span class="text-red-500">*</span></label>
-        <input type="text" id="prodName" required class="w-full border border-steel-300 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rust-400">
+        <label class="block text-xs font-semibold text-stone-600 mb-1.5">商品名称 <span class="text-rust-600">*</span></label>
+        <input type="text" id="prodName" required class="w-full border border-stone-200 px-4 py-2.5 text-sm focus:outline-none focus:border-stone-400">
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-semibold text-steel-700 mb-1">分类 <span class="text-red-500">*</span></label>
-          <select id="prodCategory" required class="w-full border border-steel-300 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rust-400">
+          <label class="block text-xs font-semibold text-stone-600 mb-1.5">分类 <span class="text-rust-600">*</span></label>
+          <select id="prodCategory" required class="w-full border border-stone-200 px-4 py-2.5 text-sm focus:outline-none focus:border-stone-400 bg-white">
             <option value="">请选择</option>
             <option value="螺丝螺帽">螺丝螺帽</option>
             <option value="电动工具">电动工具</option>
@@ -193,41 +195,40 @@
           </select>
         </div>
         <div>
-          <label class="block text-sm font-semibold text-steel-700 mb-1">价格 (¥) <span class="text-red-500">*</span></label>
-          <input type="number" id="prodPrice" required step="0.01" min="0" class="w-full border border-steel-300 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rust-400">
+          <label class="block text-xs font-semibold text-stone-600 mb-1.5">价格 (&yen;) <span class="text-rust-600">*</span></label>
+          <input type="number" id="prodPrice" required step="0.01" min="0" class="w-full border border-stone-200 px-4 py-2.5 text-sm focus:outline-none focus:border-stone-400">
         </div>
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-semibold text-steel-700 mb-1">单位</label>
-          <input type="text" id="prodUnit" value="个" class="w-full border border-steel-300 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rust-400">
+          <label class="block text-xs font-semibold text-stone-600 mb-1.5">单位</label>
+          <input type="text" id="prodUnit" value="个" class="w-full border border-stone-200 px-4 py-2.5 text-sm focus:outline-none focus:border-stone-400">
         </div>
         <div>
-          <label class="block text-sm font-semibold text-steel-700 mb-1">库存</label>
-          <input type="number" id="prodStock" value="0" min="0" class="w-full border border-steel-300 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rust-400">
+          <label class="block text-xs font-semibold text-stone-600 mb-1.5">库存</label>
+          <input type="number" id="prodStock" value="0" min="0" class="w-full border border-stone-200 px-4 py-2.5 text-sm focus:outline-none focus:border-stone-400">
         </div>
       </div>
       <div>
-        <label class="block text-sm font-semibold text-steel-700 mb-1">商品图片</label>
-        <input type="file" id="prodImageFile" accept="image/*" onchange="previewImage(event)" class="w-full border border-steel-300 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rust-400 bg-white file:mr-3 file:py-1 file:px-3 file:border-0 file:bg-steel-100 file:text-steel-700 file:rounded file:text-sm file:font-semibold hover:file:bg-steel-200">
+        <label class="block text-xs font-semibold text-stone-600 mb-1.5">商品图片</label>
+        <input type="file" id="prodImageFile" accept="image/*" onchange="previewImage(event)" class="w-full border border-stone-200 px-4 py-2.5 text-sm focus:outline-none focus:border-stone-400 bg-white file:mr-3 file:py-1 file:px-3 file:border-0 file:bg-stone-100 file:text-stone-700 file:font-medium file:text-xs">
         <input type="hidden" id="prodImage" value="">
         <div id="imagePreview" class="mt-2 hidden">
-          <img id="imagePreviewImg" src="" class="w-24 h-24 object-cover rounded-lg border border-steel-200">
-          <button type="button" onclick="clearImage()" class="text-xs text-red-500 hover:underline mt-1">清除图片</button>
+          <img id="imagePreviewImg" src="" class="w-20 h-20 object-cover border border-stone-200">
+          <button type="button" onclick="clearImage()" class="text-[10px] text-rust-600 hover:underline mt-1 block">清除</button>
         </div>
-        <p class="text-xs text-steel-400 mt-1">💡 支持 jpg/png/webp，建议正方形图片，最大10MB</p>
       </div>
       <div>
-        <label class="block text-sm font-semibold text-steel-700 mb-1">产品描述</label>
-        <textarea id="prodDesc" rows="3" class="w-full border border-steel-300 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rust-400" placeholder="材质、规格、用途等..."></textarea>
+        <label class="block text-xs font-semibold text-stone-600 mb-1.5">产品描述</label>
+        <textarea id="prodDesc" rows="3" class="w-full border border-stone-200 px-4 py-2.5 text-sm focus:outline-none focus:border-stone-400" placeholder="材质、规格、用途..."></textarea>
       </div>
-      <div class="flex items-center gap-3">
-        <input type="checkbox" id="prodFeatured" class="w-4 h-4 accent-rust-500">
-        <label for="prodFeatured" class="text-sm font-semibold text-steel-700">⭐ 设为推荐商品（显示在首页热门推荐区）</label>
+      <div class="flex items-center gap-2">
+        <input type="checkbox" id="prodFeatured" class="accent-rust-600">
+        <label for="prodFeatured" class="text-xs font-medium text-stone-600">推荐商品（首页热门推荐）</label>
       </div>
       <div class="flex gap-3 pt-2">
-        <button type="submit" class="flex-1 bg-rust-500 hover:bg-rust-600 text-white py-3 rounded-lg font-semibold transition">💾 保存</button>
-        <button type="button" onclick="closeProductForm()" class="flex-1 bg-steel-200 hover:bg-steel-300 text-steel-700 py-3 rounded-lg font-semibold transition">取消</button>
+        <button type="submit" class="flex-1 bg-stone-900 hover:bg-stone-800 text-white py-2.5 text-sm font-medium transition-colors">保存</button>
+        <button type="button" onclick="closeProductForm()" class="flex-1 border border-stone-200 text-stone-600 hover:border-stone-400 py-2.5 text-sm font-medium transition-colors">取消</button>
       </div>
     </form>
   </div>
