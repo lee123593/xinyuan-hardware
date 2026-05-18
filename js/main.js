@@ -1,5 +1,5 @@
 // ============ Global state ============
-const API = '/api';
+const API = 'https://xinyuan-hardware-site.pages.dev/api';
 let cart = [];
 let allProducts = [];
 let collapsedCategories = {};

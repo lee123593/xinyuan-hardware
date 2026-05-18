@@ -1,5 +1,5 @@
 // ============ Admin Panel ============
-const API = '/api';
+const API = 'https://xinyuan-hardware-site.pages.dev/api';
 const ADMIN_PWD = '123';
 let currentTab = 'orders';
 let orderStatusFilter = '全部';
