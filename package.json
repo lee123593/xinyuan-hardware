@@ -1,0 +1,13 @@
+{
+  "name": "xinyuan-hardware",
+  "version": "1.0.0",
+  "scripts": {
+    "build:css": "tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind-output.css --minify",
+    "watch:css": "tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind-output.css --watch",
+    "deploy": "npm run build:css && wrangler pages deploy . --branch=main"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "wrangler": "^3.0.0"
+  }
+}

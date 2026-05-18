@@ -25,7 +25,7 @@ async function loadProducts() {
 
 // ============ Product image ============
 function productImage(p, size) {
-  if (p.image && (p.image.startsWith('/uploads/') || p.image.startsWith('http'))) {
+  if (p.image && (p.image.startsWith('/uploads/') || p.image.startsWith('http') || p.image.startsWith('data:'))) {
     const cls = size === 'large' ? 'w-full h-40 object-cover' : size === 'cart' ? 'w-10 h-10 object-cover' : 'w-12 h-12 object-cover';
     return `<img src="${p.image}" alt="${p.name}" class="${cls}" onerror="this.style.display='none'">`;
   }

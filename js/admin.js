@@ -331,7 +331,7 @@ async function editProduct(id) {
     document.getElementById('prodImageFile').value = '';
     document.getElementById('prodDesc').value = p.desc;
     document.getElementById('prodFeatured').checked = p.featured;
-    if (p.image && p.image.startsWith('/uploads/')) {
+    if (p.image && p.image.(p.image.startsWith('/uploads/') || p.image.startsWith('data:') || p.image.startsWith('http'))) {
       document.getElementById('imagePreviewImg').src = p.image;
       document.getElementById('imagePreview').classList.remove('hidden');
     } else {
