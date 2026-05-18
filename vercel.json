@@ -1,0 +1,12 @@
+{
+  "buildCommand": "cd backend && npm install",
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/main" }
+  ],
+  "functions": {
+    "api/main.js": {
+      "includeFiles": "backend/**"
+    }
+  }
+}
