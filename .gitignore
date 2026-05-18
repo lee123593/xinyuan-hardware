@@ -5,3 +5,5 @@ backend/data/messages.json
 uploads/
 .env
 .DS_Store
+
+.vercel
