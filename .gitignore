@@ -1,5 +1,7 @@
 node_modules/
-backend/data/*.json
+backend/data/orders.json
+backend/data/inquiries.json
+backend/data/messages.json
 uploads/
 .env
 .DS_Store
